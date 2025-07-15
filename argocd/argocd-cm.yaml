@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
+data:
+  # Enables application status badge feature
+  statusbadge.enabled: "true"
+  accounts.dev: login,apiKey
+  ui.cssurl: "./custom/styles.css"
+  url: https://argocd.cluster.mzemke.net
+  kustomize.buildOptions: "--enable-helm"
+  resource.customizations: |
+    bitnami.com/SealedSecret:
+      health.lua: |
+        hs = {}
+        hs.status = "Healthy"
+        hs.message = "Controller doesn't report resource status"
+        return hs
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: Ov23liOJs6XytKMD30Jl
+          clientSecret: $sso-secret:clientSecret
+          redirectURI: 'https://argocd.cluster.mzemke.net/api/dex/callback'
+          orgs:
+            - name: moritzzemke-org

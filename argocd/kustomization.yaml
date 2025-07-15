@@ -1,0 +1,48 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- https://github.com/argoproj/argo-cd//manifests/cluster-install/?ref=v3.0.0
+- ingress.yaml
+
+
+configMapGenerator:
+- name: argocd-styles-cm
+  files:
+    - styles.css
+  options:
+    disableNameSuffixHash: true
+
+patches:
+- path: https://raw.githubusercontent.com/argoproj/argo-cd/v2.11.3/notifications_catalog/install.yaml
+- path: argocd-cm.yaml
+- path: argocd-rbac-cm.yaml 
+
+- target:
+    kind: ConfigMap
+    name: argocd-cmd-params-cm
+  patch: |-
+      - op: add
+        path: /data
+        value: {dummy: "dummy"}
+      - op: add
+        path: /data/server.insecure
+        value: "true"
+      - op: remove
+        path: /data/dummy
+
+- target:
+    kind: Deployment
+    name: argocd-server
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/volumeMounts/-
+      value:
+        name: styles
+        mountPath: /shared/app/custom
+    - op: add
+      path: /spec/template/spec/volumes/-
+      value:
+        name: styles
+        configMap:
+          name: argocd-styles-cm

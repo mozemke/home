@@ -1,0 +1,34 @@
+alertmanager:
+  enabled: true
+
+grafana:
+  ingress:
+    ingressClassName: nginx
+    enabled: true
+    hosts:
+      - grafana.cluster.mzemke.net
+    tls:
+      - hosts:
+        - grafana.cluster.mzemke.net
+
+kube-state-metrics:
+  releaseLabel: false
+
+prometheus-node-exporter:
+  releaseLabel: false
+
+prometheus:
+  prometheusSpec:
+    logLevel: debug
+#     storageSpec:
+#          volumeClaimTemplate:
+#            spec:
+#              storageClassName: longhorn
+#              accessModes: ["ReadWriteOnce"]
+#              resources:
+#                requests:
+#                  storage: 15Gi
+
+prometheusOperator:
+  tls:
+    enabled: false
