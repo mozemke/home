@@ -5,11 +5,7 @@
         ":rebaseStalePrs"
       ],
     "prConcurrentLimit": 10,
-    "packageRules": [
-      {
-        "addLabels": [
-          "{{depName}}"
-        ]
-      }
+    "addLabels": [
+      "{{depName}}"
     ]
 }
