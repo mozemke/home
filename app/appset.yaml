@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/mozemke/home.git
+        revision: HEAD
+        directories:
+          - path: '*'
+          - path: app
+            exclude: true
+  template:
+    metadata:
+      name: '{{.path.basenameNormalized}}'
+    spec:
+      project: triton
+      source:
+        repoURL: https://github.com/mozemke/home.git
+        targetRevision: HEAD
+        path: '{{.path.path}}'
+      destination:
+        name: in-cluster
+        namespace: 
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
