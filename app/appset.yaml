@@ -10,21 +10,21 @@ spec:
         repoURL: https://github.com/mozemke/home.git
         revision: HEAD
         directories:
-          - path: '*'
+          - path: "*"
           - path: app
             exclude: true
   template:
     metadata:
-      name: '{{.path.basenameNormalized}}'
+      name: "{{.path.basenameNormalized}}"
     spec:
-      project: triton
+      project: default
       source:
         repoURL: https://github.com/mozemke/home.git
         targetRevision: HEAD
-        path: '{{.path.path}}'
+        path: "{{.path.path}}"
       destination:
         name: in-cluster
-        namespace: 
+        namespace: "{{.path.basenameNormalized}}"
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
