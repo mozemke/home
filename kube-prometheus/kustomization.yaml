@@ -8,7 +8,7 @@ helmCharts:
   valuesFile: values.yaml
   namespace: monitoring
   includeCRDs: true
-  version: 75.15.0
+  version: 76.5.1
   
 patches:
 - target:
