@@ -7,4 +7,4 @@ helmCharts:
   repo: https://charts.longhorn.io
   valuesFile: values.yaml
   namespace: longhorn-system
-  version: 1.7.2
+  version: 1.10.0
