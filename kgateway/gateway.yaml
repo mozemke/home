@@ -1,0 +1,41 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: http
+  namespace: kgateway-system
+  annotations:
+    # the Gateway CRD is installed by this same app; skip the dry run on a fresh cluster
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  gatewayClassName: kgateway
+  listeners:
+  - name: http
+    protocol: HTTP
+    port: 8080
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: '*.cluster.mzemke.net'
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: wildcard
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https-dev
+    protocol: HTTPS
+    port: 443
+    hostname: '*.zemke.dev'
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - kind: Secret
+        name: wildcard-dev
+    allowedRoutes:
+      namespaces:
+        from: All
