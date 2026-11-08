@@ -10,7 +10,7 @@ data:
   statusbadge.enabled: "true"
   accounts.dev: login,apiKey
   ui.cssurl: "./custom/styles.css"
-  url: https://argocd.cluster.mzemke.net
+  url: https://argocd.zemke.dev
   kustomize.buildOptions: "--enable-helm"
   resource.customizations: |
     bitnami.com/SealedSecret:
@@ -19,14 +19,11 @@ data:
         hs.status = "Healthy"
         hs.message = "Controller doesn't report resource status"
         return hs
-  dex.config: |
-    connectors:
-      - type: github
-        id: github
-        name: GitHub
-        config:
-          clientID: Ov23liOJs6XytKMD30Jl
-          clientSecret: $sso-secret:clientSecret
-          redirectURI: 'https://argocd.cluster.mzemke.net/api/dex/callback'
-          orgs:
-            - name: moritzzemke-org
+  # SSO via Pocket ID (replaces the bundled Dex). Public client: PKCE, no client secret.
+  # Redirect URI to register in Pocket ID: https://argocd.zemke.dev/auth/callback
+  oidc.config: |
+    name: Pocket ID
+    issuer: https://id.zemke.dev
+    clientID: a93d8a85-b300-4754-b774-cea838e86e5e
+    requestedScopes: ["openid", "profile", "email"]
+    enablePKCEAuthentication: true
