@@ -19,13 +19,11 @@ data:
         hs.status = "Healthy"
         hs.message = "Controller doesn't report resource status"
         return hs
-  # SSO via Pocket ID (replaces the bundled Dex). The client secret is NOT in git:
-  # it lives in the argocd-secret key "oidc.pocketid.clientSecret".
+  # SSO via Pocket ID (replaces the bundled Dex). Public client: PKCE, no client secret.
   # Redirect URI to register in Pocket ID: https://argocd.zemke.dev/auth/callback
   oidc.config: |
     name: Pocket ID
     issuer: https://id.zemke.dev
     clientID: a93d8a85-b300-4754-b774-cea838e86e5e
-    clientSecret: $oidc.pocketid.clientSecret
     requestedScopes: ["openid", "profile", "email"]
     enablePKCEAuthentication: true
