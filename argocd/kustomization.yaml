@@ -34,6 +34,50 @@ patches:
       - op: remove
         path: /data/dummy
 
+# Dex is no longer used (SSO goes straight to Pocket ID): drop the bundled Dex server.
+- target: {kind: Deployment, name: argocd-dex-server}
+  patch: |-
+    $patch: delete
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: argocd-dex-server
+- target: {kind: Service, name: argocd-dex-server}
+  patch: |-
+    $patch: delete
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: argocd-dex-server
+- target: {kind: ServiceAccount, name: argocd-dex-server}
+  patch: |-
+    $patch: delete
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: argocd-dex-server
+- target: {kind: Role, name: argocd-dex-server}
+  patch: |-
+    $patch: delete
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      name: argocd-dex-server
+- target: {kind: RoleBinding, name: argocd-dex-server}
+  patch: |-
+    $patch: delete
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: argocd-dex-server
+- target: {kind: NetworkPolicy, name: argocd-dex-server-network-policy}
+  patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: argocd-dex-server-network-policy
+
 - target:
     kind: Deployment
     name: argocd-server

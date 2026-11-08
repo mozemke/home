@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: argocd-rbac-cm
 data:
-  policy.csv: |
-    p, role:octopus, *, *, *, allow
-    g, moritzzemke-org:admin, role:octopus
+  # Anyone who can sign in through Pocket ID is admin. Access is controlled in Pocket ID
+  # (who may register / which groups may use the argocd client), not here.
+  # NOTE: policy.default also applies to local accounts (e.g. accounts.dev).
+  policy.default: role:admin
