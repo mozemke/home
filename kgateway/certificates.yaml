@@ -1,0 +1,30 @@
+# TLS certificates for the Gateway listeners (cert-manager writes the Secrets of the same name).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard
+  namespace: kgateway-system
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  secretName: wildcard
+  dnsNames:
+    - '*.cluster.mzemke.net'
+  issuerRef:
+    kind: ClusterIssuer
+    name: mzemke-net-prod
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-dev
+  namespace: kgateway-system
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  secretName: wildcard-dev
+  dnsNames:
+    - '*.zemke.dev'
+  issuerRef:
+    kind: ClusterIssuer
+    name: mzemke-net-prod
