@@ -1,16 +1,50 @@
+# k3s upgrade plans: servers first, then agents.
+#
+# Safety gate: a plan only touches nodes that carry the `k3s-upgrade` label. Nodes are
+# labelled by hand when an upgrade is wanted and unlabelled afterwards:
+#   kubectl label node <node> k3s-upgrade=true      # start
+#   kubectl label node <node> k3s-upgrade-          # stop
+#
+# Versions are pinned on purpose. Kubernetes minors must be applied one at a time
+# (1.35 -> 1.36 -> 1.37): change `version` in BOTH plans in a reviewed PR for each step.
+# Never point these at a lower version than the nodes run (no downgrades).
+# Take an etcd snapshot first (`k3s etcd-snapshot save` on the server node).
 apiVersion: upgrade.cattle.io/v1
 kind: Plan
 metadata:
-  name: k3s-latest
+  name: k3s-server
   namespace: system-upgrade
 spec:
   concurrency: 1
-  version: v1.33.2+k3s1
+  version: v1.35.10+k3s1
+  cordon: true
   nodeSelector:
     matchExpressions:
       - {key: k3s-upgrade, operator: Exists}
+      - {key: node-role.kubernetes.io/control-plane, operator: Exists}
   serviceAccountName: system-upgrade
+  upgrade:
+    image: rancher/k3s-upgrade
+---
+apiVersion: upgrade.cattle.io/v1
+kind: Plan
+metadata:
+  name: k3s-agent
+  namespace: system-upgrade
+spec:
+  concurrency: 1
+  version: v1.35.10+k3s1
+  nodeSelector:
+    matchExpressions:
+      - {key: k3s-upgrade, operator: Exists}
+      - {key: node-role.kubernetes.io/control-plane, operator: DoesNotExist}
+  serviceAccountName: system-upgrade
+  # wait until the server plan has finished before touching agents
+  prepare:
+    image: rancher/k3s-upgrade
+    args: ["prepare", "k3s-server"]
   drain:
     force: true
+    skipWaitForDeleteTimeout: 60
   upgrade:
     image: rancher/k3s-upgrade
