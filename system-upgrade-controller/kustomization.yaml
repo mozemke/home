@@ -3,6 +3,10 @@ kind: Kustomization
 
 resources:
   - github.com/rancher/system-upgrade-controller?ref=v0.21.0
+  # The Plan CRD is not part of upstream's manifests/ (the controller only registers it at
+  # startup), so Argo CD could not validate the Plans before the controller ran. Ship the
+  # release CRD (identical to the one the controller embeds). Bump together with ?ref above.
+  - https://github.com/rancher/system-upgrade-controller/releases/download/v0.21.0/crd.yaml
   - plan.yaml
 
 # Upstream's own kustomization lags behind its release tag, so the image is pinned explicitly.

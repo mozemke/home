@@ -14,6 +14,10 @@ kind: Plan
 metadata:
   name: k3s-server
   namespace: system-upgrade
+  annotations:
+    # apply after the CRD and controller (wave 0) are in place
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   concurrency: 1
   version: v1.35.10+k3s1
@@ -31,6 +35,9 @@ kind: Plan
 metadata:
   name: k3s-agent
   namespace: system-upgrade
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   concurrency: 1
   version: v1.35.10+k3s1
