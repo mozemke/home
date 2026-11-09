@@ -26,6 +26,21 @@ spec:
         name: in-cluster
         namespace: "{{.path.basenameNormalized}}"
       syncPolicy:
+        # Sync every app automatically when main changes:
+        # - prune: delete resources that were removed from git (only objects Argo CD tracks)
+        # - selfHeal: revert manual changes in the cluster back to git
+        # allowEmpty stays false (default): an app that suddenly renders nothing is not pruned to zero.
+        automated:
+          prune: true
+          selfHeal: true
+        # retry covers first syncs where a CRD only appears during the sync
+        # (e.g. resources created by an operator at startup)
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 3m
         syncOptions:
           - CreateNamespace=true
           # required for Argo CD >= 3.3 (ApplicationSet CRD exceeds the client-side apply limit)
