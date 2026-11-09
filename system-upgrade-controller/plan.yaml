@@ -20,7 +20,7 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   concurrency: 1
-  version: v1.36.6+k3s1
+  version: v1.37.2+k3s1
   cordon: true
   nodeSelector:
     matchExpressions:
@@ -40,7 +40,7 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   concurrency: 1
-  version: v1.36.6+k3s1
+  version: v1.37.2+k3s1
   nodeSelector:
     matchExpressions:
       - {key: k3s-upgrade, operator: Exists}
