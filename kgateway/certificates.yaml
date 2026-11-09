@@ -28,3 +28,19 @@ spec:
   issuerRef:
     kind: ClusterIssuer
     name: mzemke-net-prod
+---
+# apex zemke.dev (not referenced by a Gateway listener)
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: zemke-dev
+  namespace: kgateway-system
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  secretName: zemke-dev
+  dnsNames:
+    - 'zemke.dev'
+  issuerRef:
+    kind: ClusterIssuer
+    name: mzemke-net-prod
