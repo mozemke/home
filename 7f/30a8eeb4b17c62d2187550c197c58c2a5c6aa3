@@ -1,0 +1,22 @@
+registry/registry.yaml
+  h_7fdf5ee3846818 1-95
+cert-manager/kustomization.yaml
+  h_7fdf5ee3846818 5,7
+cert-manager/wildcard.yaml
+  h_7fdf5ee3846818 11-35
+httpbin/httpbin.yaml
+  h_7fdf5ee3846818 1-74
+httpbin/httproute.yaml
+  h_7fdf5ee3846818 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7f30a8eeb4b17c62d2187550c197c58c2a5c6aa3",
+  "prompts": {},
+  "humans": {
+    "h_7fdf5ee3846818": {
+      "author": "moritz.zemke@telekom.de <moritz.zemke@telekom.de>"
+    }
+  }
+}
